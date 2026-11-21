@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Для тебя ❤</title>
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    font-family: Georgia, serif;
+    color: #fff;
+    padding: 20px;
+  }
+  .card {
+    max-width: 420px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 30px 25px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  h1 { font-size: 26px; margin: 0 0 10px; color: #ff6b8a; }
+  p.hint { color: #cfd8ff; font-size: 16px; line-height: 1.6; }
+  input {
+    width: 100%;
+    padding: 13px;
+    margin: 15px 0;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    font-size: 17px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  button {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #ff6b8a, #ff8fab);
+    color: #fff;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  button:active { transform: scale(0.98); }
+  .error { color: #ffb3b3; font-size: 14px; min-height: 18px; margin-top: 8px; }
+  .final { display: none; }
+  .final h2 { color: #ff8fab; font-size: 24px; }
+  .final p { color: #e8eaff; line-height: 1.7; font-size: 17px; }
+</style>
+</head>
+<body>
+<div class="card" id="quiz">
+  <h1>Привет 💫</h1>
+  <p class="hint">Я приготовил для тебя маленький квест.<br>Отгадай три загадки — и в конце тебя ждёт кое-что важное.</p>
+  <p class="hint" id="riddle"></p>
+  <input type="text" id="answer" placeholder="Твой ответ" autocomplete="off">
+  <button onclick="check()">Проверить</button>
+  <p class="error" id="error"></p>
+</div>
+
+<div class="card final" id="final">
+  <h2>Ты прошла квест ❤</h2>
+  <p>Ты — то самое «внимание», которое я готов дарить тебе каждый день.<br><br>Ты невероятная. Спасибо, что ты есть 💖</p>
+</div>
+
+<script>
+  const steps = [
+    { q: "Загадка 1: Она появляется на лице, когда тебе хорошо. Что это?", a: "улыбка" },
+    { q: "Загадка 2: Это делаешь ты, а я делаю тоже. Без этого меня нет. Кто это?", a: "ты" },
+    { q: "Загадка 3: Её просят, когда рассказывают важное. И это то, что я тебе дарю постоянно. Что это?", a: "внимание" }
+  ];
+  let current = 0;
+  const riddleEl = document.getElementById("riddle");
+  const answerEl = document.getElementById("answer");
+  const errorEl = document.getElementById("error");
+  riddleEl.textContent = steps[0].q;
+
+  function norm(s) {
+    return s.toLowerCase().trim().replace(/ё/g, "е");
+  }
+
+  function check() {
+    const val = norm(answerEl.value);
+    if (!val) { errorEl.textContent = "Введи ответ :)"; return; }
+    if (norm(steps[current].a) === val) {
+      current++;
+      errorEl.textContent = "";
+      answerEl.value = "";
+      if (current < steps.length) {
+        riddleEl.textContent = steps[current].q;
+      } else {
+        document.getElementById("quiz").style.display = "none";
+        document.getElementById("final").style.display = "block";
+      }
+    } else {
+      errorEl.textContent = "Не то... Подумай ещё 💭";
+      answerEl.value = "";
+    }
+  }
+
+  answerEl.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") check();
+  });
+</script>
+</body>
+</html>
